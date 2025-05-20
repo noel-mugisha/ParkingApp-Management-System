@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//
+// ENUMS
+//
+
+enum CodeType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum RoleName {
+  User
+  Admin
+  ParkingAttendant
+}
+
+enum Status {
+  ENABLED
+  DISABLED
+}
+
+//
+// MODELS
+//
+
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  firstName  String
+  lastName   String
+  email      String   @unique
+  password   String
+  role       RoleName @default(User)
+  status     Status   @default(ENABLED)
+  isVerified Boolean  @default(false)
+
+  codes Code[] @relation("UserCodes")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Code {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String
+  type      CodeType
+  userId    String   @db.Uuid
+  user      User     @relation("UserCodes", fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model Parking {
+  id                      String   @id @default(uuid()) @db.Uuid
+  parkingName             String   @unique
+  numberOfAvailableSpaces Int
+  chargingFeesPerHour     Float
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  carEntries CarEntry[] @relation("ParkingCarEntries")
+  tickets    Ticket[]   @relation("ParkingTickets")
+}
+
+model CarEntry {
+  id            String    @id @default(uuid()) @db.Uuid
+  plateNumber   String
+  parkingCode   String    @db.Uuid
+  parkingId     String    @db.Uuid
+  entryDateTime DateTime  @default(now())
+  exitDateTime  DateTime?
+  chargedAmount Float     @default(0)
+
+  parking Parking  @relation("ParkingCarEntries", fields: [parkingId], references: [id])
+  tickets Ticket[] @relation("CarEntryTickets")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+  id            String   @id @default(uuid()) @db.Uuid
+  carEntryId    String   @db.Uuid
+  parkingId     String   @db.Uuid
+  plateNumber   String
+  parkingName   String
+  entryDateTime DateTime
+
+  carEntry CarEntry @relation("CarEntryTickets", fields: [carEntryId], references: [id], onDelete: Cascade)
+  parking  Parking  @relation("ParkingTickets", fields: [parkingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
