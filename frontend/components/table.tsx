@@ -41,7 +41,7 @@ export function Table<T>({
     const [searchQuery, setSearchQuery] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: string | null, direction: string }>({ key: null, direction: 'ascending' });
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = paginate ? 12 : data.length;
+    const rowsPerPage = paginate ? 5 : data.length;
 
     const filteredData = useMemo(() => {
         return data.filter((row) => {

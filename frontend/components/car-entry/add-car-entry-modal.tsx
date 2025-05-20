@@ -145,15 +145,21 @@ const TicketPDF: React.FC<{ ticket: Ticket }> = ({ ticket }) => (
         <Text style={styles.value}>
           {new Date(ticket.entryDateTime).toLocaleString()}
         </Text>
-      </View>
+      </View>{" "}
       <View style={styles.section}>
         <Text style={styles.label}>Charging Rate</Text>
         <Text style={styles.value}>
-          ${ticket.chargingFeesPerHour ?? "N/A"}/hour
+          {ticket.chargingFeesPerHour
+            ? `$${ticket.chargingFeesPerHour}`
+            : "N/A"}
+          /hour
         </Text>
       </View>
       <View style={styles.footer}>
-        <Text>Parking Management System | Contact: support@parkingmanagement.com | (123) 456-7890</Text>
+        <Text>
+          Parking Management System | Contact: support@parkingmanagement.com |
+          (123) 456-7890
+        </Text>
       </View>
     </Page>
   </Document>
@@ -187,11 +193,14 @@ const AddCarEntryModal: React.FC = () => {
   const onSubmit = async (data: CreateCarEntryFormData) => {
     try {
       const response = await createCarEntryMutation.mutateAsync(data);
+      // Find the selected parking to get the charging rate
+      const selectedParking = parkingsData?.data.find(
+        (p: any) => p.id === data.parkingCode
+      );
+
       setTicket({
         ...response.data.ticket,
-        chargingFeesPerHour: parkingsData?.data.find(
-          (p: any) => p.id === data.parkingCode
-        )?.chargingFeesPerHour,
+        chargingFeesPerHour: selectedParking?.chargingFeesPerHour || null,
       });
       toast.success("Car entry and ticket created successfully");
     } catch (error) {

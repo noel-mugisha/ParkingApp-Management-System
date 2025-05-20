@@ -15,4 +15,15 @@ type Ticket = {
   plateNumber: string;
   parkingName: string;
   entryDateTime: string;
+  carEntryId: string;
+  parkingId: string;
+  parking?: {
+    id: string;
+    parkingName: string;
+    numberOfAvailableSpaces: number;
+    chargingFeesPerHour: number;
+    createdAt: string;
+    updatedAt: string;
+  };
+  carEntry?: CarEntry;
 };

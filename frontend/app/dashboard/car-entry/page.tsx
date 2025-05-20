@@ -133,12 +133,10 @@ const TicketPDF: React.FC<{ ticket: Ticket }> = ({ ticket }) => (
         <Text style={styles.label}>Entry Time</Text>
         <Text style={styles.value}>
           {new Date(ticket.entryDateTime).toLocaleString()}
-        </Text>
-      </View>
-      <View style={styles.section}>
+        </Text>      </View>      <View style={styles.section}>
         <Text style={styles.label}>Charging Rate</Text>
         <Text style={styles.value}>
-          ${ticket.chargingFeesPerHour ?? "1000"}/hour
+          {ticket.chargingFeesPerHour ? `$${ticket.chargingFeesPerHour}` : "N/A"}/hour
         </Text>
       </View>
       <View style={styles.footer}>
@@ -194,11 +192,10 @@ const BillPDF: React.FC<{
       <View style={styles.section}>
         <Text style={styles.label}>Parking Duration</Text>
         <Text style={styles.value}>{durationHours.toFixed(2)} hours</Text>
-      </View>
-      <View style={styles.section}>
+      </View>      <View style={styles.section}>
         <Text style={styles.label}>Charging Rate</Text>
         <Text style={styles.value}>
-          ${ticket.chargingFeesPerHour ?? "N/A"}/hour
+          {ticket.chargingFeesPerHour ? `$${ticket.chargingFeesPerHour}` : "N/A"}/hour
         </Text>
       </View>
       <View style={styles.section}>
@@ -265,6 +262,9 @@ const CarEntryTable: React.FC = () => {
       });
 
       // Prepare bill data
+      // Extract charging rate from ticket.parking if available
+      const chargingRate = ticket.parking?.chargingFeesPerHour || null;
+      
       setBillData({
         carEntry: {
           ...carEntry,
@@ -273,7 +273,7 @@ const CarEntryTable: React.FC = () => {
         },
         ticket: {
           ...ticket,
-          chargingFeesPerHour: ticket.parking?.chargingFeesPerHour,
+          chargingFeesPerHour: chargingRate,
         },
         durationHours,
       });
@@ -307,12 +307,15 @@ const CarEntryTable: React.FC = () => {
         (new Date(carEntry.exitDateTime).getTime() -
           new Date(carEntry.entryDateTime).getTime()) /
         (1000 * 60 * 60);
-
+      
+      // Make sure to extract the charging rate from the parking object
+      const chargingRate = ticket.parking?.chargingFeesPerHour || null;
+      
       setBillData({
         carEntry: carEntry,
         ticket: {
           ...ticket,
-          chargingFeesPerHour: ticket.parking?.chargingFeesPerHour,
+          chargingFeesPerHour: chargingRate,
         },
         durationHours,
       });
@@ -434,6 +437,14 @@ const CarEntryTable: React.FC = () => {
                   {new Date(ticketData.data[0].entryDateTime).toLocaleString()}
                 </p>
               </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700">Charging Rate</p>
+                <p className="text-sm text-gray-900">
+                  {ticketData.data[0].parking?.chargingFeesPerHour 
+                    ? `$${ticketData.data[0].parking.chargingFeesPerHour}/hour` 
+                    : "N/A"}
+                </p>
+              </div>
               <div className="flex space-x-2">
                 <Button
                   onClick={() => {
@@ -504,6 +515,16 @@ const CarEntryTable: React.FC = () => {
                 </p>
                 <p className="text-sm text-gray-900">
                   {billData.durationHours.toFixed(2)} hours
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700">
+                  Charging Rate
+                </p>
+                <p className="text-sm text-gray-900">
+                  {billData.ticket.chargingFeesPerHour 
+                    ? `$${billData.ticket.chargingFeesPerHour}/hour` 
+                    : "N/A"}
                 </p>
               </div>
               <div>
