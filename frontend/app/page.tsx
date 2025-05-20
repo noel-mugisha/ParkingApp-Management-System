@@ -19,9 +19,7 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <ContactSection />
       </main>
-      <Footer />
     </div>
   );
 };
