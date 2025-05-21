@@ -36,7 +36,7 @@ export const makeMiddleware = (): Middleware => {
       if (!token) {
         return next(new HttpError(401, 'Not authorized, no token'));
       }
-      
+
       try {
         const utilsService = new UtilsService();
         const decoded = await utilsService.verifyAccessToken(token);
@@ -62,7 +62,7 @@ export const makeMiddleware = (): Middleware => {
     routeNotFound: (req, res, next) => {
       return next(new HttpError(404, 'Route not found'));
     },
-    errorHandler: (err, req, res, next) => {
+    errorHandler: (err, req, res) => {
       if (err instanceof HttpError) {
         return res.status(err.status).send({ status: err.status, message: err.message });
       } else if (err instanceof ZodError) {

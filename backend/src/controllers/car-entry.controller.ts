@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 import { ApiResponse } from "../utils/response";
@@ -125,6 +126,7 @@ export const getTicketsByCarEntry = async (req: Request, res: Response) => {
 export const updateCarExit = async (req: Request, res: Response) => {
   try {
     // @ts-ignore - from auth middleware
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: userId, role } = req.user;
 
     if (role !== "Admin" && role !== "ParkingAttendant") {

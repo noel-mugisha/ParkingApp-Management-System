@@ -9,6 +9,7 @@ import { validateUpdateProfileInput } from '../schema/profile.schema';
 export const getProfile = async (req: Request, res: Response) => {
   try {
     // Get user ID from auth middleware
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore: userId is added by auth middleware
     const userId = req.user.id;
 
@@ -51,6 +52,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     const { firstName, lastName } = validatedData;
 
     // Get user ID from auth middleware
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore: userId is added by auth middleware
     const userId = req.user.id;
 

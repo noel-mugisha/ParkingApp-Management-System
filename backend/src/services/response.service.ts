@@ -1,6 +1,7 @@
 import { Response } from 'express';
 
 export class ApiResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static success(res: Response, statusCode: number, message: string, data?: any) {
     return res.status(statusCode).json({
       success: true,
@@ -9,6 +10,7 @@ export class ApiResponse {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static error(res: Response, statusCode: number, message: string, errors?: any) {
     return res.status(statusCode).json({
       success: false,
@@ -17,6 +19,7 @@ export class ApiResponse {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static serverError(res: Response, error: any) {
     console.error('Server error:', error);
     

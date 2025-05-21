@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Request, Response } from 'express';
 import { prisma } from '../database/prisma';
 import { ApiResponse } from '../utils/response';
@@ -9,7 +10,8 @@ import { validateCreateParkingInput, validateUpdateParkingInput } from '../schem
 export const createParking = async (req: Request, res: Response) => {
     try {
         // @ts-ignore - from auth middleware
-        const { id: userId, role } = req.user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: userId, role } = req.user;
 
         if (role !== 'Admin') {
             return ApiResponse.error(res, 403, 'Only admins can create parking lots');
@@ -70,6 +72,7 @@ export const getAllParkings = async (req: Request, res: Response) => {
 export const updateParking = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id: userId, role } = req.user;
 
         if (role !== 'Admin') {
@@ -110,6 +113,7 @@ export const updateParking = async (req: Request, res: Response) => {
 export const deleteParking = async (req: Request, res: Response) => {
     try {
         // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id: userId, role } = req.user;
 
         if (role !== 'Admin') {
