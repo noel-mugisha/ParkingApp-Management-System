@@ -3,6 +3,12 @@ generator client {
   output   = "app/generated/prisma/client"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./erd/ERD.png"
+}
+
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -68,7 +74,7 @@ model Parking {
   updatedAt               DateTime   @updatedAt
 
   carEntries              CarEntry[] @relation("ParkingCarEntries")
-  tickets         Ticket[]    @relation("ParkingTickets")
+  tickets                 Ticket[]   @relation("ParkingTickets")
 }
 
 model CarEntry {
@@ -81,7 +87,7 @@ model CarEntry {
   chargedAmount Float     @default(0)
 
   parking       Parking   @relation("ParkingCarEntries", fields: [parkingId], references: [id])
-  tickets         Ticket[]    @relation("CarEntryTickets")
+  tickets       Ticket[]  @relation("CarEntryTickets")
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
